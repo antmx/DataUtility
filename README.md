@@ -1,2 +1,2 @@
 # DataUtility
-Lightweight database access utility in .NET
+Lightweight, generic database access utility in .NET
