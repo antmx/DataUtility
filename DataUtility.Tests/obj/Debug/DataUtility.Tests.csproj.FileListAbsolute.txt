@@ -1,0 +1,10 @@
+D:\Projects\DataUtility\DataUtility.Tests\obj\Debug\DataUtility.Tests.csprojResolveAssemblyReference.cache
+D:\Projects\DataUtility\DataUtility.Tests\bin\Debug\Netricity.DataUtility.Tests.dll
+D:\Projects\DataUtility\DataUtility.Tests\bin\Debug\Netricity.DataUtility.Tests.pdb
+D:\Projects\DataUtility\DataUtility.Tests\bin\Debug\Netricity.DataUtility.Core.dll
+D:\Projects\DataUtility\DataUtility.Tests\bin\Debug\nunit.framework.dll
+D:\Projects\DataUtility\DataUtility.Tests\bin\Debug\Netricity.DataUtility.Core.pdb
+D:\Projects\DataUtility\DataUtility.Tests\bin\Debug\nunit.framework.xml
+D:\Projects\DataUtility\DataUtility.Tests\obj\Debug\Netricity.DataUtility.Tests.dll
+D:\Projects\DataUtility\DataUtility.Tests\obj\Debug\Netricity.DataUtility.Tests.pdb
+D:\Projects\DataUtility\DataUtility.Tests\bin\Debug\Netricity.DataUtility.Tests.dll.config

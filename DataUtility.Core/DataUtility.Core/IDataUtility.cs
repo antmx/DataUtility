@@ -2,17 +2,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Xml;
 
 namespace Netricity.DataUtility.Core
 {
-	interface IDataUtility : IDisposable
+	public interface IDataUtility : IDisposable
 	{
+		DbCommand Command { get; /*set;*/ }
+		void NewUpCommand(string commandText);
+
+		DbParameter AddParamWithValue(string name, object value);
 		void AddOutputParam(string name, object value);
 		void AddParam(string name, IEnumerable value);
 		void AddParam(string name, object value);
 		void AddParam(string name, string value, int maxLen);
 		void AddTableValueParam(string name, IEnumerable<IDataRecord> value);
+		void SetParamSqlDbType(string name, SqlDbType sqlDbType);
 
 		DataSet ExecuteDataSet();
 		DataTable ExecuteDataTable();
@@ -21,6 +27,7 @@ namespace Netricity.DataUtility.Core
 		void ExecuteReader();
 		T ExecuteScalar<T>();
 		XmlReader ExecuteXmlReader();
+		bool ReaderHasRows();
 
 		bool CheckFieldExists(string fieldName);
 		bool GetBool(string fieldName);
