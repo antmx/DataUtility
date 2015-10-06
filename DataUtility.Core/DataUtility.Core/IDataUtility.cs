@@ -10,6 +10,7 @@ namespace Netricity.DataUtility.Core
 	public interface IDataUtility : IDisposable
 	{
 		DbCommand Command { get; /*set;*/ }
+		DbDataAdapter DataAdapter { get; }
 		void NewUpCommand(string commandText);
 
 		DbParameter AddParamWithValue(string name, object value);

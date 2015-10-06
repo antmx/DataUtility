@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Netricity.Common;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
@@ -21,16 +22,18 @@ namespace Netricity.DataUtility.Core
 
 		public abstract DbCommand Command { get; }
 
-		private DbConnection _conn;
+		public abstract DbDataAdapter DataAdapter { get; }
 
-		private DbTransaction _tran;
+      public abstract DbConnection Connection { get; }
 
-		private DbDataAdapter _adptr;
+      private DbTransaction _tran;
+
+		//private DbDataAdapter _adptr;
 
 		private IDataReader _reader;
 
 		// To detect redundant calls
-		private bool _disposedValue;
+		private bool _disposedHasBeenCalled;
 
 		private bool _closeConnectionAfterFirstCommand;
 
@@ -62,6 +65,8 @@ namespace Netricity.DataUtility.Core
 		//}
 
 		#endregion
+
+		#region Methods
 
 		public abstract void NewUpCommand(string commandText);
 
@@ -193,7 +198,7 @@ namespace Netricity.DataUtility.Core
 		{
 			try
 			{
-				if (((this._tran != null)))
+				if (this._tran != null)
 				{
 					this._tran.Commit();
 				}
@@ -206,21 +211,21 @@ namespace Netricity.DataUtility.Core
 			return true;
 		}
 
-		public DataSet ExecuteDataSet()
+		public virtual DataSet ExecuteDataSet()
 		{
-			//this._adptr = new SqlDataAdapter();
-			//this._adptr.SelectCommand = this._cmd;
-			//DataSet dataSet = new DataSet();
-			//this._adptr.Fill(dataSet);
-			//return dataSet;
-			throw new NotImplementedException();
+         this.DataAdapter.SelectCommand = this.Command;
+
+			var dataSet = new DataSet();
+			this.DataAdapter.Fill(dataSet);
+
+			return dataSet;
 		}
 
-		public DataTable ExecuteDataTable()
+		public virtual DataTable ExecuteDataTable()
 		{
 			DataSet dataSet = this.ExecuteDataSet();
 
-			if ((dataSet.Tables.Count > 0))
+			if (dataSet.Tables.Count > 0)
 			{
 				return dataSet.Tables[0];
 			}
@@ -228,12 +233,12 @@ namespace Netricity.DataUtility.Core
 			return null;
 		}
 
-		public int ExecuteNonQuery()
+		public virtual int ExecuteNonQuery()
 		{
 			return this.Command.ExecuteNonQuery();
 		}
 
-		public int ExecuteNonQuery(int expectedRowsAffected)
+		public virtual int ExecuteNonQuery(int expectedRowsAffected)
 		{
 			int num = this.ExecuteNonQuery();
 			if ((num != expectedRowsAffected))
@@ -243,7 +248,7 @@ namespace Netricity.DataUtility.Core
 			return num;
 		}
 
-		public void ExecuteReader()
+		public virtual void ExecuteReader()
 		{
 			if (this._closeConnectionAfterFirstCommand)
 			{
@@ -261,60 +266,61 @@ namespace Netricity.DataUtility.Core
 		/// </summary>
 		/// <typeparam name="T">The type of the data in the first column of the first row of the result set.</typeparam>
 		/// <returns></returns>
-		public T ExecuteScalar<T>()
+		public virtual T ExecuteScalar<T>()
 		{
 			object obj2 = this.Command.ExecuteScalar();
-			if (obj2 is T)
+
+         if (obj2 is T)
 			{
 				return (T)obj2;
 			}
-			//return (T)null;
+			
 			return default(T);
 		}
 
-		public XmlReader ExecuteXmlReader()
+		public virtual XmlReader ExecuteXmlReader()
 		{
 			//return this._cmd.ExecuteXmlReader();
 			throw new NotImplementedException();
 		}
 
-		public bool GetBool(string fieldName)
+		public virtual bool GetBool(string fieldName)
 		{
 			this.EnsureFieldExists(fieldName);
 			return ((this._reader[fieldName].ToString() == "1") || (this._reader[fieldName].ToString().ToLower() == "true"));
 		}
 
-		public bool GetBool(string fieldName, string trueString)
+		public virtual bool GetBool(string fieldName, string trueString)
 		{
 			this.EnsureFieldExists(fieldName);
 			return this.GetBool(fieldName, trueString, true);
 		}
 
-		public bool GetBool(string fieldName, string trueString, bool ignoreCase)
+		public virtual bool GetBool(string fieldName, string trueString, bool ignoreCase)
 		{
 			this.EnsureFieldExists(fieldName);
 			return (string.Compare(this._reader[fieldName].ToString(), trueString, ignoreCase) == 0);
 		}
 
-		public byte[] GetByteArray(string fieldName)
+		public virtual byte[] GetByteArray(string fieldName)
 		{
 			this.EnsureFieldExistsOrIsNull(fieldName);
 			return (byte[])this._reader[fieldName];
 		}
 
-		public DateTime GetDateTime(string fieldName)
+		public virtual DateTime GetDateTime(string fieldName)
 		{
 			this.EnsureFieldExists(fieldName);
 			return Convert.ToDateTime(this._reader[fieldName]);
 		}
 
-		public double GetDouble(string fieldName)
+		public virtual double GetDouble(string fieldName)
 		{
 			this.EnsureFieldExists(fieldName);
 			return double.Parse(this._reader[fieldName].ToString());
 		}
 
-		public T GetEnum<T>(string fieldName)
+		public virtual T GetEnum<T>(string fieldName)
 		{
 			dynamic requestedType = typeof(T);
 			if (!requestedType.IsEnum)
@@ -325,7 +331,7 @@ namespace Netricity.DataUtility.Core
 			return (T)Enum.Parse(requestedType, this._reader[fieldName].ToString(), true);
 		}
 
-		public T GetFromXml<T>(string fieldName)
+		public virtual T GetFromXml<T>(string fieldName)
 		{
 			int ordinal = this.EnsureFieldExistsOrIsNull(fieldName);
 			if (this._reader.IsDBNull(ordinal))
@@ -340,7 +346,7 @@ namespace Netricity.DataUtility.Core
 			return (T)serializer.Deserialize(xmlReader);
 		}
 
-		public int GetInt(string fieldName)
+		public virtual int GetInt(string fieldName)
 		{
 			int num = 0;
 			this.EnsureFieldExists(fieldName);
@@ -355,7 +361,7 @@ namespace Netricity.DataUtility.Core
 			return num;
 		}
 
-		public Nullable<DateTime> GetNullableDateTime(string fieldName)
+		public virtual Nullable<DateTime> GetNullableDateTime(string fieldName)
 		{
 			int ordinal = this.EnsureFieldExistsOrIsNull(fieldName);
 			if (this._reader.IsDBNull(ordinal))
@@ -365,7 +371,7 @@ namespace Netricity.DataUtility.Core
 			return new Nullable<DateTime>(Convert.ToDateTime(this._reader[fieldName]));
 		}
 
-		public Nullable<int> GetNullableInt(string fieldName)
+		public virtual Nullable<int> GetNullableInt(string fieldName)
 		{
 			int ordinal = this.EnsureFieldExistsOrIsNull(fieldName);
 			if (this._reader.IsDBNull(ordinal))
@@ -375,7 +381,7 @@ namespace Netricity.DataUtility.Core
 			return new Nullable<int>(int.Parse(this._reader[fieldName].ToString()));
 		}
 
-		public string GetNullableString(string fieldName)
+		public virtual string GetNullableString(string fieldName)
 		{
 			int ordinal = this.EnsureFieldExistsOrIsNull(fieldName);
 			if (this._reader.IsDBNull(ordinal))
@@ -385,20 +391,20 @@ namespace Netricity.DataUtility.Core
 			return this._reader[fieldName].ToString();
 		}
 
-		public T GetOutputParamValue<T>(string paramName)
+      public virtual T GetOutputParamValue<T>(string paramName)
 		{
 			var parameter = this._dicOutputParams[paramName];
 
 			return (T)parameter.Value;
 		}
 
-		public string GetString(string fieldName)
+      public virtual string GetString(string fieldName)
 		{
 			this.EnsureFieldExists(fieldName);
 			return this._reader[fieldName].ToString();
 		}
 
-		public T GetValue<T>(string fieldName, T defaultValue = default(T))
+      public virtual T GetValue<T>(string fieldName, T defaultValue = default(T))
 		{
 
 			dynamic requestedType = typeof(T);
@@ -520,18 +526,10 @@ namespace Netricity.DataUtility.Core
 
 		public bool NextRow()
 		{
-			if ((this._reader == null))
+			if (this._reader == null)
 			{
 				return false;
 			}
-			//If Not Me._reader.HasRows Then
-			//	Return False
-			//End If
-			//var sqlReader = this._reader as SqlDataReader;
-			//if (!sqlReader.HasRows)
-			//{
-			//	return false;
-			//}
 
 			if (!this.ReaderHasRows())
 				return false;
@@ -554,23 +552,26 @@ namespace Netricity.DataUtility.Core
 
 		public void ResetCommand(string commandText, CommandType commandType)
 		{
-			if (((this._reader != null)))
+			if (this._reader != null)
 			{
 				this._reader.Close();
 			}
-			if (((this._dicOutputParams != null)))
+
+			if (this._dicOutputParams != null)
 			{
 				this._dicOutputParams.Clear();
 				this._dicOutputParams = null;
 			}
+
 			if (!this._useTransaction)
 			{
-				if (((this.Command != null)))
+				if (this.Command != null)
 				{
 					this.Command.Dispose();
 				}
-				//_sqlCommand = new SqlCommand(commandText, this._conn);
+				
 				NewUpCommand(commandText);
+
 				this.Command.CommandType = commandType;
 			}
 			else
@@ -583,28 +584,47 @@ namespace Netricity.DataUtility.Core
 
 		public void ResetTransaction()
 		{
-			this._tran = this._conn.BeginTransaction();
-			//_sqlCommand = this._conn.CreateCommand();
+			this._tran = this.Connection.BeginTransaction();
+			
 			NewUpCommand(null);
-			this.Command.Connection = this._conn;
+
+			this.Command.Connection = this.Connection;
 			this.Command.Transaction = this._tran;
 		}
 
-		public void RollbackTransaction()
+      //public abstract void InitDbConnection();
+
+      //public abstract void InitDbAdapter();
+
+      public void RollbackTransaction()
 		{
-			if (((this._tran != null)))
+			if (this._tran != null)
 			{
 				this._tran.Rollback();
 			}
 		}
 
-		public int Timeout
-		{
-			get;
-			set;
-		}
+      public int Timeout
+      {
+         get
+         {
+            if ((this.Command == null))
+            {
+               throw new CustomException("This internal Command object is null");
+            }
+            return this.Command.CommandTimeout;
+         }
+         set
+         {
+            if ((this.Command == null))
+            {
+               throw new CustomException("This internal Command object is null");
+            }
+            this.Command.CommandTimeout = value;
+         }
+      }
 
-		public void Dispose()
+      public void Dispose()
 		{
 			// Do not change this code.  Put cleanup code in Dispose(disposing As Boolean) above.
 			Dispose(true);
@@ -614,33 +634,32 @@ namespace Netricity.DataUtility.Core
 
 		protected virtual void Dispose(bool disposing)
 		{
-			if (!this._disposedValue)
+			if (!this._disposedHasBeenCalled)
 			{
 				if (disposing)
 				{
-					if (((this._adptr != null)))
+					if (this.DataAdapter != null)
 					{
-						this._adptr.Dispose();
+						this.DataAdapter.Dispose();
 					}
-					if (((this._reader != null)))
+
+					if (this._reader != null)
 					{
 						this._reader.Close();
 						this._reader.Dispose();
 					}
-					if (((this._tran != null)))
+
+					if (this._tran != null)
 					{
 						this._tran.Dispose();
 					}
-					if (((this.Command != null)))
+
+					if (this.Command != null)
 					{
 						this.Command.Dispose();
 					}
-					if (((this._conn != null)))
-					{
-						this._conn.Close();
-						this._conn.Dispose();
-					}
-					if (((this._dicOutputParams != null)))
+
+					if (this._dicOutputParams != null)
 					{
 						this._dicOutputParams.Clear();
 						this._dicOutputParams = null;
@@ -651,8 +670,9 @@ namespace Netricity.DataUtility.Core
 				// TODO: set large fields to null.
 			}
 
-			this._disposedValue = true;
+			this._disposedHasBeenCalled = true;
 		}
 
+		#endregion
 	}
 }

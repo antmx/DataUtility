@@ -68,5 +68,16 @@ namespace Netricity.DataUtility.Tests
 			Assert.AreEqual(ParameterDirection.Input, param.Direction);
 			Assert.AreEqual(SqlDbType.Structured, param.SqlDbType);
 		}
+
+		[Test()]
+		public void SetParamSqlDbType_SetsType_WithCorrectType()
+		{
+			IDataUtility util = new SqlDataUtility();
+
+			var param = util.AddParamWithValue("Field1", "Foo");
+			util.SetParamSqlDbType("Field1", SqlDbType.UniqueIdentifier);
+
+			Assert.AreEqual(SqlDbType.UniqueIdentifier, ((SqlParameter)param).SqlDbType);
+		}
 	}
 }

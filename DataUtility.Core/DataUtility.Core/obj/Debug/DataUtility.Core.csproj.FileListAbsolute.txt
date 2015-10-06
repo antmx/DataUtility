@@ -2,3 +2,6 @@ D:\Projects\DataUtility\DataUtility.Core\DataUtility.Core\bin\Debug\Netricity.Da
 D:\Projects\DataUtility\DataUtility.Core\DataUtility.Core\bin\Debug\Netricity.DataUtility.Core.pdb
 D:\Projects\DataUtility\DataUtility.Core\DataUtility.Core\obj\Debug\Netricity.DataUtility.Core.dll
 D:\Projects\DataUtility\DataUtility.Core\DataUtility.Core\obj\Debug\Netricity.DataUtility.Core.pdb
+C:\Users\Anthony\OneDrive\Documents\Projects\DataUtility\DataUtility.Core\DataUtility.Core\obj\Debug\DataUtility.Core.csprojResolveAssemblyReference.cache
+C:\Users\Anthony\OneDrive\Documents\Projects\DataUtility\DataUtility.Core\DataUtility.Core\obj\Debug\Netricity.DataUtility.Core.dll
+C:\Users\Anthony\OneDrive\Documents\Projects\DataUtility\DataUtility.Core\DataUtility.Core\obj\Debug\Netricity.DataUtility.Core.pdb

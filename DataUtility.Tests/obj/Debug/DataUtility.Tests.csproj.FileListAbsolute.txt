@@ -8,3 +8,17 @@ D:\Projects\DataUtility\DataUtility.Tests\bin\Debug\nunit.framework.xml
 D:\Projects\DataUtility\DataUtility.Tests\obj\Debug\Netricity.DataUtility.Tests.dll
 D:\Projects\DataUtility\DataUtility.Tests\obj\Debug\Netricity.DataUtility.Tests.pdb
 D:\Projects\DataUtility\DataUtility.Tests\bin\Debug\Netricity.DataUtility.Tests.dll.config
+D:\Projects\DataUtility\DataUtility.Tests\bin\Debug\TestDatabase.mdf
+D:\Projects\DataUtility\DataUtility.Tests\bin\Debug\TestDatabase_log.ldf
+C:\Users\Anthony\OneDrive\Documents\Projects\DataUtility\DataUtility.Tests\bin\Debug\TestDatabase.mdf
+C:\Users\Anthony\OneDrive\Documents\Projects\DataUtility\DataUtility.Tests\bin\Debug\TestDatabase_log.ldf
+C:\Users\Anthony\OneDrive\Documents\Projects\DataUtility\DataUtility.Tests\bin\Debug\Netricity.DataUtility.Tests.dll.config
+C:\Users\Anthony\OneDrive\Documents\Projects\DataUtility\DataUtility.Tests\bin\Debug\Netricity.DataUtility.Tests.dll
+C:\Users\Anthony\OneDrive\Documents\Projects\DataUtility\DataUtility.Tests\bin\Debug\Netricity.DataUtility.Tests.pdb
+C:\Users\Anthony\OneDrive\Documents\Projects\DataUtility\DataUtility.Tests\bin\Debug\Netricity.DataUtility.Core.dll
+C:\Users\Anthony\OneDrive\Documents\Projects\DataUtility\DataUtility.Tests\bin\Debug\nunit.framework.dll
+C:\Users\Anthony\OneDrive\Documents\Projects\DataUtility\DataUtility.Tests\bin\Debug\Netricity.DataUtility.Core.pdb
+C:\Users\Anthony\OneDrive\Documents\Projects\DataUtility\DataUtility.Tests\bin\Debug\nunit.framework.xml
+C:\Users\Anthony\OneDrive\Documents\Projects\DataUtility\DataUtility.Tests\obj\Debug\DataUtility.Tests.csprojResolveAssemblyReference.cache
+C:\Users\Anthony\OneDrive\Documents\Projects\DataUtility\DataUtility.Tests\obj\Debug\Netricity.DataUtility.Tests.dll
+C:\Users\Anthony\OneDrive\Documents\Projects\DataUtility\DataUtility.Tests\obj\Debug\Netricity.DataUtility.Tests.pdb

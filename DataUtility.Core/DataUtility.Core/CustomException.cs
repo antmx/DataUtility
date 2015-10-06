@@ -8,8 +8,6 @@ namespace Netricity.DataUtility.Core
 {
 	class CustomException : ApplicationException
 	{
-		private string p;
-
 		public CustomException(string message)
 			: base(message)
 		{

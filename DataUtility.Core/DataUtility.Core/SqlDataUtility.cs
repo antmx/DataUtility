@@ -11,6 +11,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 using Microsoft.SqlServer.Server;
+using Netricity.Common;
 //using Every1.Core.Configuration;
 
 namespace Netricity.DataUtility.Core
@@ -27,12 +28,13 @@ namespace Netricity.DataUtility.Core
 		private static DateTime _sqlMaxDate;
 		private static DateTime _sqlMinDate;
 
-		private SqlDataAdapter _adptr;
+		private SqlDataAdapter _sqlDataAdapter;
+		private SqlCommand _sqlCommand;
 		private bool _closeConnectionAfterFirstCommand;
 		//private SqlCommand _cmd;
 		private string _commandText;
 		private CommandType _commandType;
-		private SqlConnection _conn;
+		private SqlConnection _sqlConnection;
 		private string _connectionString;
 		//private Dictionary<string, SqlParameter> _dicOutputParams;
 		//Private _reader As SqlDataReader
@@ -80,44 +82,29 @@ namespace Netricity.DataUtility.Core
 			get { return DateTime.MaxValue; }
 		}
 
-		public int Timeout
-		{
-			get
-			{
-				if ((this.Command == null))
-				{
-					throw new CustomException("This internal Command object is null");
-				}
-				return this.Command.CommandTimeout;
-			}
-			set
-			{
-				if ((this.Command == null))
-				{
-					throw new CustomException("This internal Command object is null");
-				}
-				this.Command.CommandTimeout = value;
-			}
-		}
-
-		//public override SqlCommand Command { get; set; }
-
-		private SqlCommand _sqlCommand;
-
 		public override DbCommand Command
 		{
 			get { return _sqlCommand; }
-			//set { _sqlCommand = value; }
 		}
 
-		#endregion
+		public override DbDataAdapter DataAdapter
+		{
+			get { return _sqlDataAdapter; }
+		}
 
-		#region Constructors
+      public override DbConnection Connection
+      {
+         get { return _sqlConnection; }
+      }
 
-		/// <summary>
-		/// Initializes the <see cref="SqlDataUtility" /> class.
-		/// </summary>
-		static SqlDataUtility()
+      #endregion
+
+      #region Constructors
+
+      /// <summary>
+      /// Initializes the <see cref="SqlDataUtility" /> class.
+      /// </summary>
+      static SqlDataUtility()
 		{
 			//string connectionStringName = CoreSection.Settings.DataUtilConnectionStringName;
 			string connectionStringName = "Connection";
@@ -190,9 +177,9 @@ namespace Netricity.DataUtility.Core
 			this._commandType = commandType;
 			this._connectionString = connectionString;
 			this._closeConnectionAfterFirstCommand = closeConnectionAfterFirstCommand;
-			this._conn = new SqlConnection(this._connectionString);
-			this._conn.Open();
-			this._sqlCommand = new SqlCommand(this._commandText, this._conn);
+			this._sqlConnection = new SqlConnection(this._connectionString);
+			this._sqlConnection.Open();
+			this._sqlCommand = new SqlCommand(this._commandText, this._sqlConnection);
 			this.Command.CommandType = this._commandType;
 		}
 
@@ -202,7 +189,7 @@ namespace Netricity.DataUtility.Core
 
 		public override void NewUpCommand(string commandText)
 		{
-			this._sqlCommand = new SqlCommand(commandText, this._conn);
+			this._sqlCommand = new SqlCommand(commandText, this._sqlConnection);
 		}
 
 		public override DbParameter AddParamWithValue(string name, object value)
